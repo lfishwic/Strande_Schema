@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<xs:schema 
-    xmlns:xs="http://www.w3.org/2001/XMLSchema" 
+<xs:schema
+    xmlns:xs="http://www.w3.org/2001/XMLSchema"
+    xmlns="http://schemas.strande.ai/view/v1.0/viewSchema.xsd"
     targetNamespace="http://schemas.strande.ai/view/v1.0/viewSchema.xsd"
     elementFormDefault="qualified">
-
-  <xs:element name="views" type="tns:ViewsType"/> 
+  <xs:element name="views" type="ViewsType"/> 
 
   <xs:complexType name="ViewsType">
     <xs:sequence>
