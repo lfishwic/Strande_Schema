@@ -1,1 +1,240 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema 
+    xmlns:xs="http://www.w3.org/2001/XMLSchema" 
+    targetNamespace="http://schemas.strande.ai/views/v1.1/viewschema.xsd"
+    elementFormDefault="qualified">
 
+  <xs:element name="views" type="ViewsType"/>
+
+  <xs:complexType name="ViewsType">
+    <xs:sequence>
+      <xs:element name="list" type="ListType" minOccurs="0" maxOccurs="unbounded"/>
+      <xs:element name="form" type="FormType" minOccurs="0" maxOccurs="unbounded"/>
+      <xs:element name="assistant" type="AssistantType" minOccurs="0" maxOccurs="unbounded"/>
+      <xs:element name="card" type="CardType" minOccurs="0" maxOccurs="unbounded"/>
+    </xs:sequence>
+  </xs:complexType>
+
+
+  <xs:complexType name="ListType">
+    <xs:sequence>
+      <xs:element name="actions" type="ActionsType" minOccurs="0" maxOccurs="1"/>
+      <xs:element name="fields" type="FieldsType" minOccurs="0" maxOccurs="1"/>
+    </xs:sequence>
+    <xs:attribute name="name" type="xs:string" use="required"/>
+    <xs:attribute name="title" type="xs:string" use="required"/>
+    <xs:attribute name="endpoint" type="xs:string" use="required"/>
+    <xs:attribute name="module" type="xs:string" use="required"/>
+    <xs:attribute name="canNew" type="xs:boolean" use="optional"/>
+    <xs:attribute name="canEdit" type="xs:boolean" use="optional"/>
+    <xs:attribute name="canDelete" type="xs:boolean" use="optional"/>
+    <xs:attribute name="canExport" type="xs:boolean" use="optional"/>
+    <xs:attribute name="onSave" type="xs:string" use="optional"/>
+    <xs:attribute name="onNew" type="xs:string" use="optional"/>
+    <xs:attribute name="onDelete" type="xs:string" use="optional"/>
+  </xs:complexType>
+
+  <xs:complexType name="FormType">
+    <xs:sequence>
+      <xs:element name="actions" type="ActionsType" minOccurs="0" maxOccurs="1"/>
+      <xs:element name="panel" type="PanelType" minOccurs="0" maxOccurs="unbounded"/>
+    </xs:sequence>
+    <xs:attribute name="name" type="xs:string" use="required"/>
+    <xs:attribute name="title" type="xs:string" use="required"/>
+    <xs:attribute name="endpoint" type="xs:string" use="required"/>
+    <xs:attribute name="module" type="xs:string" use="required"/>
+    <xs:attribute name="canNew" type="xs:boolean" use="optional"/>
+    <xs:attribute name="canEdit" type="xs:boolean" use="optional"/>
+    <xs:attribute name="canDelete" type="xs:boolean" use="optional"/>
+    <xs:attribute name="onSave" type="xs:string" use="optional"/>
+    <xs:attribute name="onNew" type="xs:string" use="optional"/>
+    <xs:attribute name="onDelete" type="xs:string" use="optional"/>
+  </xs:complexType>
+
+  <xs:complexType name="AssistantType">
+    <xs:sequence>
+      <xs:element name="step" type="StepType" minOccurs="0" maxOccurs="unbounded"/>
+    </xs:sequence>
+    <xs:attribute name="name" type="xs:string" use="required"/>
+    <xs:attribute name="title" type="xs:string" use="required"/>
+    <xs:attribute name="endpoint" type="xs:string" use="required"/>
+    <xs:attribute name="module" type="xs:string" use="required"/>
+</xs:complexType>   
+
+  <xs:complexType name="CardType">
+    <xs:sequence>
+      <xs:element name="fields" type="FieldsType" minOccurs="0" maxOccurs="1"/>
+    </xs:sequence>
+    <xs:attribute name="name" type="xs:string" use="required"/>
+    <xs:attribute name="title" type="xs:string" use="required"/>
+    <xs:attribute name="endpoint" type="xs:string" use="required"/>
+    <xs:attribute name="module" type="xs:string" use="required"/>
+    <xs:attribute name="canNew" type="xs:boolean" use="optional"/>
+    <xs:attribute name="canEdit" type="xs:boolean" use="optional"/>
+    <xs:attribute name="canDelete" type="xs:boolean" use="optional"/>
+    <xs:attribute name="canExport" type="xs:boolean" use="optional"/>
+    <xs:attribute name="onSave" type="xs:string" use="optional"/>
+    <xs:attribute name="onNew" type="xs:string" use="optional"/>
+    <xs:attribute name="onDelete" type="xs:string" use="optional"/>
+  </xs:complexType>
+
+  <xs:complexType name="ActionsType">
+    <xs:sequence>
+      <xs:element name="action" type="ActionType" minOccurs="0" maxOccurs="unbounded"/>
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:complexType name="ActionType">
+    <xs:sequence>
+      <!-- If group="true", we may nest additional actions or action-segment -->
+      <xs:element name="action" type="ActionType" minOccurs="0" maxOccurs="unbounded"/>
+      <xs:element name="action-segment" type="ActionSegmentType" minOccurs="0" maxOccurs="unbounded"/>
+    </xs:sequence>
+    <xs:attribute name="name" type="xs:string" use="required"/>
+    <xs:attribute name="title" type="xs:string" use="required"/>
+    <xs:attribute name="condition" type="xs:string" use="optional"/>
+    <xs:attribute name="css" type="xs:string" use="optional"/>
+    <xs:attribute name="priority" type="xs:string" use="optional"/>
+    <xs:attribute name="group" type="xs:boolean" use="optional"/>
+  </xs:complexType>
+
+  <!--
+       <action-segment> is a container of <action> (like "Deposit" or "Main" segments).
+       Ex:
+         <action-segment condition="..." name="..." title="..." priority="...">
+           <action .../>
+         </action-segment>
+  -->
+  <xs:complexType name="ActionSegmentType">
+    <xs:sequence>
+      <xs:element name="action" type="ActionType" minOccurs="0" maxOccurs="unbounded"/>
+    </xs:sequence>
+    <xs:attribute name="name" type="xs:string" use="required"/>
+    <xs:attribute name="title" type="xs:string" use="required"/>
+    <xs:attribute name="condition" type="xs:string" use="optional"/>
+    <xs:attribute name="priority" type="xs:string" use="optional"/>
+  </xs:complexType>
+
+
+  <!--==============================================================-->
+  <!--  FIELDS                                                      -->
+  <!--==============================================================-->
+  <!-- 
+       <fields>
+         <field name="..." type="..." ... />
+         ...
+       </fields>
+  -->
+  <xs:complexType name="FieldsType">
+    <xs:sequence>
+      <xs:element name="field" type="FieldType" minOccurs="0" maxOccurs="unbounded"/>
+    </xs:sequence>
+  </xs:complexType>
+
+  <!-- 
+       Single field definition used in many places:
+         - <fields> inside <list>
+         - <panel> inside <form>
+         - <step> in <assistant>, etc.
+
+       Common attributes are shown here.
+  -->
+  <xs:complexType name="FieldType">
+    <xs:attribute name="name" type="xs:string" use="required"/>
+    <xs:attribute name="type" type="xs:string" use="optional"/>
+    <xs:attribute name="title" type="xs:string" use="optional"/>
+    <xs:attribute name="width" type="xs:string" use="optional"/>
+    <xs:attribute name="colSpan" type="xs:integer" use="optional"/>
+    <xs:attribute name="readOnly" type="xs:boolean" use="optional"/>
+    <xs:attribute name="required" type="xs:boolean" use="optional"/>
+    <xs:attribute name="default" type="xs:string" use="optional"/>
+    <xs:attribute name="min" type="xs:string" use="optional"/>
+    <xs:attribute name="max" type="xs:string" use="optional"/>
+    <xs:attribute name="onChange" type="xs:string" use="optional"/>
+    <xs:attribute name="condition" type="xs:string" use="optional"/>
+    <xs:attribute name="ref" type="xs:string" use="optional"/>
+    <xs:attribute name="list" type="xs:string" use="optional"/>
+    <xs:attribute name="action" type="xs:string" use="optional"/>
+  </xs:complexType>
+
+
+  <!--==============================================================-->
+  <!--  PANEL: used by <form> to group fields, or to hold tabs.      -->
+  <!--==============================================================-->
+  <!--
+       <panel name="..." title="..." colSpan="..." showTitle="..." collapsed="..." canCollapse="..." tabs="...">
+         If tabs="true", we may have <tab> children. Otherwise we might have <field> children. 
+         <field ... />
+         <tab ... />
+         <panel ... />  
+       </panel>
+  -->
+  <xs:complexType name="PanelType">
+    <xs:sequence>
+      <!-- We allow fields, nested panels, or tabs in any order here. 
+           Adjust as necessary for your usage rules. -->
+      <xs:element name="field" type="FieldType" minOccurs="0" maxOccurs="unbounded"/>
+      <xs:element name="panel" type="PanelType" minOccurs="0" maxOccurs="unbounded"/>
+      <xs:element name="tab" type="TabType" minOccurs="0" maxOccurs="unbounded"/>
+    </xs:sequence>
+    <xs:attribute name="name" type="xs:string" use="required"/>
+    <xs:attribute name="title" type="xs:string" use="optional"/>
+    <xs:attribute name="colSpan" type="xs:integer" use="optional"/>
+    <xs:attribute name="showTitle" type="xs:boolean" use="optional"/>
+    <xs:attribute name="collapsed" type="xs:boolean" use="optional"/>
+    <xs:attribute name="canCollapse" type="xs:boolean" use="optional"/>
+    <xs:attribute name="tabs" type="xs:boolean" use="optional"/>
+    <xs:attribute name="related" type="xs:boolean" use="optional"/>
+    <xs:attribute name="view" type="xs:string" use="optional"/>
+    <xs:attribute name="field" type="xs:string" use="optional"/>
+    <xs:attribute name="editable" type="xs:boolean" use="optional"/>
+    <xs:attribute name="canNew" type="xs:boolean" use="optional"/>
+    <xs:attribute name="canEdit" type="xs:boolean" use="optional"/>
+    <xs:attribute name="canDelete" type="xs:boolean" use="optional"/>
+    <xs:attribute name="canAdd" type="xs:boolean" use="optional"/>
+    <xs:attribute name="canRemove" type="xs:boolean" use="optional"/>
+  </xs:complexType>
+
+
+  <!--==============================================================-->
+  <!--  TAB: used when <panel> has tabs="true".                     -->
+  <!--==============================================================-->
+  <!--
+       <tab name="..." title="..." showTitle="...">
+         <panel ...>
+           <field .../>
+           ...
+         </panel>
+         <panel .../>
+         ...
+       </tab>
+  -->
+  <xs:complexType name="TabType">
+    <xs:sequence>
+      <xs:element name="panel" type="PanelType" minOccurs="0" maxOccurs="unbounded"/>
+    </xs:sequence>
+    <xs:attribute name="name" type="xs:string" use="required"/>
+    <xs:attribute name="title" type="xs:string" use="optional"/>
+    <xs:attribute name="showTitle" type="xs:boolean" use="optional"/>
+  </xs:complexType>
+
+
+  <!--==============================================================-->
+  <!--  STEP: used inside <assistant>.                               -->
+  <!--==============================================================-->
+  <!--
+       <step name="..." priority="..." title="...">
+         <field .../>
+         <field .../>
+       </step>
+  -->
+  <xs:complexType name="StepType">
+    <xs:sequence>
+      <xs:element name="field" type="FieldType" minOccurs="0" maxOccurs="unbounded"/>
+    </xs:sequence>
+    <xs:attribute name="name" type="xs:string" use="required"/>
+    <xs:attribute name="priority" type="xs:string" use="optional"/>
+    <xs:attribute name="title" type="xs:string" use="optional"/>
+  </xs:complexType>
+
+</xs:schema>
