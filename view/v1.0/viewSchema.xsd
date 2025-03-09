@@ -9,18 +9,18 @@
 
   <xs:complexType name="ViewsType">
     <xs:sequence>
-      <xs:element name="list" type="ListType" minOccurs="0" maxOccurs="unbounded"/>
-      <xs:element name="form" type="FormType" minOccurs="0" maxOccurs="unbounded"/>
-      <xs:element name="assistant" type="AssistantType" minOccurs="0" maxOccurs="unbounded"/>
-      <xs:element name="card" type="CardType" minOccurs="0" maxOccurs="unbounded"/>
+      <xs:element name="list" type="tns:ListType" minOccurs="0" maxOccurs="unbounded"/>
+      <xs:element name="form" type="tns:FormType" minOccurs="0" maxOccurs="unbounded"/>
+      <xs:element name="assistant" type="tns:AssistantType" minOccurs="0" maxOccurs="unbounded"/>
+      <xs:element name="card" type="tns:CardType" minOccurs="0" maxOccurs="unbounded"/>
     </xs:sequence>
   </xs:complexType>
 
 
   <xs:complexType name="ListType">
     <xs:sequence>
-      <xs:element name="actions" type="ActionsType" minOccurs="0" maxOccurs="1"/>
-      <xs:element name="fields" type="FieldsType" minOccurs="0" maxOccurs="1"/>
+      <xs:element name="actions" type="tns:ActionsType" minOccurs="0" maxOccurs="1"/>
+      <xs:element name="fields" type="tns:FieldsType" minOccurs="0" maxOccurs="1"/>
     </xs:sequence>
     <xs:attribute name="name" type="xs:string" use="required"/>
     <xs:attribute name="title" type="xs:string" use="required"/>
@@ -37,8 +37,8 @@
 
   <xs:complexType name="FormType">
     <xs:sequence>
-      <xs:element name="actions" type="ActionsType" minOccurs="0" maxOccurs="1"/>
-      <xs:element name="panel" type="PanelType" minOccurs="0" maxOccurs="unbounded"/>
+      <xs:element name="actions" type="tns:ActionsType" minOccurs="0" maxOccurs="1"/>
+      <xs:element name="panel" type="tns:PanelType" minOccurs="0" maxOccurs="unbounded"/>
     </xs:sequence>
     <xs:attribute name="name" type="xs:string" use="required"/>
     <xs:attribute name="title" type="xs:string" use="required"/>
@@ -54,7 +54,7 @@
 
   <xs:complexType name="AssistantType">
     <xs:sequence>
-      <xs:element name="step" type="StepType" minOccurs="0" maxOccurs="unbounded"/>
+      <xs:element name="step" type="tns:StepType" minOccurs="0" maxOccurs="unbounded"/>
     </xs:sequence>
     <xs:attribute name="name" type="xs:string" use="required"/>
     <xs:attribute name="title" type="xs:string" use="required"/>
@@ -64,7 +64,7 @@
 
   <xs:complexType name="CardType">
     <xs:sequence>
-      <xs:element name="fields" type="FieldsType" minOccurs="0" maxOccurs="1"/>
+      <xs:element name="fields" type="tns:FieldsType" minOccurs="0" maxOccurs="1"/>
     </xs:sequence>
     <xs:attribute name="name" type="xs:string" use="required"/>
     <xs:attribute name="title" type="xs:string" use="required"/>
@@ -81,15 +81,15 @@
 
   <xs:complexType name="ActionsType">
     <xs:sequence>
-      <xs:element name="action" type="ActionType" minOccurs="0" maxOccurs="unbounded"/>
+      <xs:element name="action" type="tns:ActionType" minOccurs="0" maxOccurs="unbounded"/>
     </xs:sequence>
   </xs:complexType>
 
   <xs:complexType name="ActionType">
     <xs:sequence>
       <!-- If group="true", we may nest additional actions or action-segment -->
-      <xs:element name="action" type="ActionType" minOccurs="0" maxOccurs="unbounded"/>
-      <xs:element name="action-segment" type="ActionSegmentType" minOccurs="0" maxOccurs="unbounded"/>
+      <xs:element name="action" type="tns:ActionType" minOccurs="0" maxOccurs="unbounded"/>
+      <xs:element name="action-segment" type="tns:ActionSegmentType" minOccurs="0" maxOccurs="unbounded"/>
     </xs:sequence>
     <xs:attribute name="name" type="xs:string" use="required"/>
     <xs:attribute name="title" type="xs:string" use="required"/>
@@ -108,7 +108,7 @@
   -->
   <xs:complexType name="ActionSegmentType">
     <xs:sequence>
-      <xs:element name="action" type="ActionType" minOccurs="0" maxOccurs="unbounded"/>
+      <xs:element name="action" type="tns:ActionType" minOccurs="0" maxOccurs="unbounded"/>
     </xs:sequence>
     <xs:attribute name="name" type="xs:string" use="required"/>
     <xs:attribute name="title" type="xs:string" use="required"/>
@@ -128,7 +128,7 @@
   -->
   <xs:complexType name="FieldsType">
     <xs:sequence>
-      <xs:element name="field" type="FieldType" minOccurs="0" maxOccurs="unbounded"/>
+      <xs:element name="field" type="tns:FieldType" minOccurs="0" maxOccurs="unbounded"/>
     </xs:sequence>
   </xs:complexType>
 
@@ -174,9 +174,9 @@
     <xs:sequence>
       <!-- We allow fields, nested panels, or tabs in any order here. 
            Adjust as necessary for your usage rules. -->
-      <xs:element name="field" type="FieldType" minOccurs="0" maxOccurs="unbounded"/>
-      <xs:element name="panel" type="PanelType" minOccurs="0" maxOccurs="unbounded"/>
-      <xs:element name="tab" type="TabType" minOccurs="0" maxOccurs="unbounded"/>
+      <xs:element name="field" type="tns:FieldType" minOccurs="0" maxOccurs="unbounded"/>
+      <xs:element name="panel" type="tns:PanelType" minOccurs="0" maxOccurs="unbounded"/>
+      <xs:element name="tab" type="tns:TabType" minOccurs="0" maxOccurs="unbounded"/>
     </xs:sequence>
     <xs:attribute name="name" type="xs:string" use="required"/>
     <xs:attribute name="title" type="xs:string" use="optional"/>
@@ -212,7 +212,7 @@
   -->
   <xs:complexType name="TabType">
     <xs:sequence>
-      <xs:element name="panel" type="PanelType" minOccurs="0" maxOccurs="unbounded"/>
+      <xs:element name="panel" type="tns:PanelType" minOccurs="0" maxOccurs="unbounded"/>
     </xs:sequence>
     <xs:attribute name="name" type="xs:string" use="required"/>
     <xs:attribute name="title" type="xs:string" use="optional"/>
@@ -231,7 +231,7 @@
   -->
   <xs:complexType name="StepType">
     <xs:sequence>
-      <xs:element name="field" type="FieldType" minOccurs="0" maxOccurs="unbounded"/>
+      <xs:element name="field" type="tns:FieldType" minOccurs="0" maxOccurs="unbounded"/>
     </xs:sequence>
     <xs:attribute name="name" type="xs:string" use="required"/>
     <xs:attribute name="priority" type="xs:string" use="optional"/>
