@@ -5,7 +5,10 @@
 -->
 <xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema"
            xmlns:vc="http://www.w3.org/2007/XMLSchema-versioning"
-           vc:minVersion="1.1">
+           vc:minVersion="1.1"
+           targetNamespace="http://schemas.strande.ai/command/v1.0.0"
+           xmlns="http://schemas.strande.ai/command/v1.0.0"
+           elementFormDefault="qualified">
 
   <!-- The root element: <command-group> -->
   <xs:element name="command-group">
@@ -98,7 +101,7 @@
     The 'condition' attribute is universally allowed and thus excluded 
     from the 'not(exists(...))' checks.
     -->
-    <xs:assert test="
+    <xssert test="
       
       -- 1. Assistant
       if (@type = 'assistant') then 
