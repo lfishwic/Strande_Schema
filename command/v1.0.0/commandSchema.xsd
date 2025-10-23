@@ -1,1 +1,205 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- 
+  XML Schema for the Command Engine
+  Requires an XSD 1.1 compliant parser to enable advanced validation.
+-->
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema"
+           xmlns:vc="http://www.w3.org/2007/XMLSchema-versioning"
+           vc:minVersion="1.1">
+
+  <!-- The root element: <command-group> -->
+  <xs:element name="command-group">
+    <xs:complexType>
+      <xs:sequence>
+        <!-- Contains one or more <command> elements -->
+        <xs:element name="command" type="CommandElement" minOccurs="1" maxOccurs="unbounded" />
+      </xs:sequence>
+      <!-- Has a mandatory 'name' attribute -->
+      <xs:attribute name="name" type="xs:string" use="required" />
+    </xs:complexType>
+  </xs:element>
+
+  <!-- The definition for a single <command> element -->
+  <xs:complexType name="CommandElement">
+    
+    <!-- Master list of all possible attributes (all lowercase) -->
+    
+    <xs:attribute name="type" type="CommandType" use="required" />
+
+    <!-- SpEL condition to determine whether the command step should run or not -->
+    <!-- Used by: assistant, mail, method, print, prompt, redirect, save, script, suggestion, update, validate -->
+    <xs:attribute name="condition" type="xs:string" use="optional" />
+    
+    <!-- The field name for the suggestion -->
+    <!-- Used by: suggestion, update -->
+    <xs:attribute name="field" type="xs:string" use="optional" />
+    
+    <!-- The message to be temporarily set in metaData -->
+    <!-- Used by: prompt, suggestion -->
+    <xs:attribute name="message" type="xs:string" use="optional" />
+    
+    <!-- Method call (e.g., 'BeanName.methodName') -->
+    <!-- Used by: method, redirect, update, validate -->
+    <xs:attribute name="method" type="xs:string" use="optional" />
+    
+    <!-- True or false, whether the user should be redirected to the message -->
+    <!-- Used by: mail -->
+    <xs:attribute name="open" type="xs:string" use="optional" />
+    
+    <!-- The name of the report file to be defaulted -->
+    <!-- Used by: print -->
+    <xs:attribute name="report" type="xs:string" use="optional" />
+    
+    <!-- JS Script value -->
+    <!-- Used by: redirect, script, update, validate -->
+    <xs:attribute name="script" type="xs:string" use="optional" />
+    
+    <!-- True of False, whether the message should be automatically sent -->
+    <!-- Used by: mail -->
+    <xs:attribute name="send" type="xs:string" use="optional" />
+    
+    <!-- error, warning or info -->
+    <!-- Used by: validate -->
+    <xs:attribute name="severity" type="xs:string" use="optional" />
+    
+    <!-- SpElL condition returning true or false -->
+    <!-- Used by: validate -->
+    <xs:attribute name="test" type="xs:string" use="optional" />
+    
+    <!-- the title of the prompt -->
+    <!-- Used by: prompt -->
+    <xs:attribute name="title" type="xs:string" use="optional" />
+    
+    <!-- SpEL value -->
+    <!-- Used by: redirect, update -->
+    <xs:attribute name="value" type="xs:string" use="optional" />
+    
+    <!-- The assistant view name -->
+    <!-- Used by: assistant -->
+    <xs:attribute name="view" type="xs:string" use="optional" />
+    
+    <!-- The command group to execute if the user decision is false -->
+    <!-- Used by: prompt -->
+    <xs:attribute name="falsecommand" type="xs:string" use="optional" />
+    
+    <!-- The display name for a false value -->
+    <!-- Used by: prompt -->
+    <xs:attribute name="falselabel" type="xs:string" use="optional" />
+    
+    <!-- The display name for a true value -->
+    <!-- Used by: prompt -->
+    <xs:attribute name="truelabel" type="xs:string" use="optional" />
+
+    <!-- 
+    =====================================================================
+    == ADVANCED XSD 1.1 VALIDATION LOGIC ==
+    =====================================================================
+    This block enforces type-specific rules for attributes.
+    The 'condition' attribute is universally allowed and thus excluded 
+    from the 'not(exists(...))' checks.
+    -->
+    <xs:assert test="
+      
+      -- 1. Assistant
+      if (@type = 'assistant') then 
+      (
+        exists(@view) and
+        not(exists(@field or @message or @method or @open or @report or @script or @send or @severity or @test or @title or @value or @falsecommand or @falselabel or @truelabel))
+      )
+      
+      -- 2. Mail
+      else if (@type = 'mail') then
+      (
+        not(exists(@field or @message or @method or @report or @script or @severity or @test or @title or @value or @view or @falsecommand or @falselabel or @truelabel))
+      )
+      
+      -- 3. Method
+      else if (@type = 'method') then
+      (
+        exists(@method) and
+        not(exists(@field or @message or @open or @report or @script or @send or @severity or @test or @title or @value or @view or @falsecommand or @falselabel or @truelabel))
+      )
+      
+      -- 4. Print
+      else if (@type = 'print') then
+      (
+        exists(@report) and
+        not(exists(@field or @message or @method or @open or @script or @send or @severity or @test or @title or @value or @view or @falsecommand or @falselabel or @truelabel))
+      )
+      
+      -- 5. Prompt
+      else if (@type = 'prompt') then
+      (
+        exists(@title) and exists(@message) and exists(@truelabel) and exists(@falselabel) and
+        not(exists(@field or @method or @open or @report or @script or @send or @severity or @test or @value or @view))
+      )
+      
+      -- 6. Redirect
+      else if (@type = 'redirect') then
+      (
+        (count(@value) + count(@script) + count(@method)) = 1 and
+        not(exists(@field or @message or @open or @report or @send or @severity or @test or @title or @view or @falsecommand or @falselabel or @truelabel))
+      )
+      
+      -- 7. Save
+      else if (@type = 'save') then
+      (
+        not(exists(@field or @message or @method or @open or @report or @script or @send or @severity or @test or @title or @value or @view or @falsecommand or @falselabel or @truelabel))
+      )
+      
+      -- 8. Script
+      else if (@type = 'script') then
+      (
+        exists(@script) and
+        not(exists(@field or @message or @method or @open or @report or @send or @severity or @test or @title or @value or @view or @falsecommand or @falselabel or @truelabel))
+      )
+      
+      -- 9. Suggestion
+      else if (@type = 'suggestion') then
+      (
+        exists(@field) and exists(@message) and
+        not(exists(@method or @open or @report or @script or @send or @severity or @test or @title or @value or @view or @falsecommand or @falselabel or @truelabel))
+      )
+      
+      -- 10. Update
+      else if (@type = 'update') then
+      (
+        exists(@field) and 
+        (count(@value) + count(@script) + count(@method)) = 1 and
+        not(exists(@message or @open or @report or @send or @severity or @test or @title or @view or @falsecommand or @falselabel or @truelabel))
+      )
+      
+      -- 11. Validate
+      else if (@type = 'validate') then
+      (
+        exists(@severity) and
+        (count(@test) + count(@script) + count(@method)) = 1 and
+        not(exists(@field or @message or @open or @report or @send or @title or @value or @view or @falsecommand or @falselabel or @truelabel))
+      )
+      
+      -- Default
+      else 
+        true()
+    "/>
+    
+  </xs:complexType>
+
+  <!-- Enumeration of all valid command types (all lowercase) -->
+  <xs:simpleType name="CommandType">
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="assistant" />
+      <xs:enumeration value="mail" />
+      <xs:enumeration value="method" />
+      <xs:enumeration value="print" />
+      <xs:enumeration value="prompt" />
+      <xs:enumeration value="redirect" />
+      <xs:enumeration value="save" />
+      <xs:enumeration value="script" />
+      <xs:enumeration value="suggestion" />
+      <xs:enumeration value="update" />
+      <xs:enumeration value="validate" />
+    </xs:restriction>
+  </xs:simpleType>
+
+</xs:schema>
 
