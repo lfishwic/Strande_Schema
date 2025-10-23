@@ -1,125 +1,122 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- 
+  XML Schema for the Command Engine (XSD 1.0 Compliant)
+-->
 <xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema"
-           xmlns:vc="http://www.w3.org/2007/XMLSchema-versioning"
-           xmlns:tns="http://schemas.strande.ai/command/v1.0.0"
            targetNamespace="http://schemas.strande.ai/command/v1.0.0"
-           elementFormDefault="qualified"
-           vc:minVersion="1.1">
+           xmlns="http://schemas.strande.ai/command/v1.0.0"
+           elementFormDefault="qualified">
 
-  <!-- Root element -->
+  <!-- The root element: <commands> -->
   <xs:element name="commands">
     <xs:complexType>
       <xs:sequence>
-        <!-- PREFIX the type reference -->
-        <xs:element name="command-group"
-                    type="tns:CommandGroupElement"
-                    minOccurs="1" maxOccurs="unbounded"/>
+        <!-- Contains one or more <command-group> elements -->
+        <xs:element name="command-group" type="CommandGroupElement" minOccurs="1" maxOccurs="unbounded" />
       </xs:sequence>
     </xs:complexType>
   </xs:element>
 
+  <!-- The definition for a <command-group> element -->
   <xs:complexType name="CommandGroupElement">
     <xs:sequence>
-      <!-- PREFIX the type reference -->
-      <xs:element name="command"
-                  type="tns:CommandElement"
-                  minOccurs="1" maxOccurs="unbounded"/>
+      <!-- Contains one or more <command> elements -->
+      <xs:element name="command" type="CommandElement" minOccurs="1" maxOccurs="unbounded" />
     </xs:sequence>
-    <xs:attribute name="name" type="xs:string" use="required"/>
+    <!-- Has a mandatory 'name' attribute -->
+    <xs:attribute name="name" type="xs:string" use="required" />
   </xs:complexType>
 
+  <!-- The definition for a single <command> element -->
   <xs:complexType name="CommandElement">
-    <!-- PREFIX the type reference -->
-    <xs:attribute name="type" type="tns:CommandType" use="required"/>
+    
+    <!-- Master list of all possible attributes (all lowercase) -->
+    
+    <xs:attribute name="type" type="CommandType" use="required" />
 
-    <!-- attributes (unchanged types for brevity) -->
-    <xs:attribute name="condition" type="xs:string"/>
-    <xs:attribute name="field" type="xs:string"/>
-    <xs:attribute name="message" type="xs:string"/>
-    <xs:attribute name="method" type="xs:string"/>
-    <xs:attribute name="open" type="xs:string"/>
-    <xs:attribute name="report" type="xs:string"/>
-    <xs:attribute name="script" type="xs:string"/>
-    <xs:attribute name="send" type="xs:string"/>
-    <xs:attribute name="severity" type="xs:string"/>
-    <xs:attribute name="test" type="xs:string"/>
-    <xs:attribute name="title" type="xs:string"/>
-    <xs:attribute name="value" type="xs:string"/>
-    <xs:attribute name="view" type="xs:string"/>
-    <xs:attribute name="falsecommand" type="xs:string"/>
-    <xs:attribute name="falselabel" type="xs:string"/>
-    <xs:attribute name="truelabel" type="xs:string"/>
-
-    <!-- FIX the assert logic: use boolean directly (no exists(...or...)) -->
-    <xs:assert test="
-      if (@type='assistant') then (
-        exists(@view) and
-        not(@field or @message or @method or @open or @report or @script or @send or
-            @severity or @test or @title or @value or @falsecommand or @falselabel or @truelabel)
-      )
-      else if (@type='mail') then (
-        not(@field or @message or @method or @report or @script or @severity or @test or
-            @title or @value or @view or @falsecommand or @falselabel or @truelabel)
-      )
-      else if (@type='method') then (
-        exists(@method) and
-        not(@field or @message or @open or @report or @script or @send or @severity or @test or
-            @title or @value or @view or @falsecommand or @falselabel or @truelabel)
-      )
-      else if (@type='print') then (
-        exists(@report) and
-        not(@field or @message or @method or @open or @script or @send or @severity or @test or
-            @title or @value or @view or @falsecommand or @falselabel or @truelabel)
-      )
-      else if (@type='prompt') then (
-        exists(@title) and exists(@message) and exists(@truelabel) and exists(@falselabel) and
-        not(@field or @method or @open or @report or @script or @send or @severity or @test or @value or @view)
-      )
-      else if (@type='redirect') then (
-        (count(@value) + count(@script) + count(@method)) = 1 and
-        not(@field or @message or @open or @report or @send or @severity or @test or
-            @title or @view or @falsecommand or @falselabel or @truelabel)
-      )
-      else if (@type='save') then (
-        not(@field or @message or @method or @open or @report or @script or @send or @severity or @test or
-            @title or @value or @view or @falsecommand or @falselabel or @truelabel)
-      )
-      else if (@type='script') then (
-        exists(@script) and
-        not(@field or @message or @method or @open or @report or @send or @severity or @test or
-            @title or @value or @view or @falsecommand or @falselabel or @truelabel)
-      )
-      else if (@type='suggestion') then (
-        exists(@field) and exists(@message) and
-        not(@method or @open or @report or @script or @send or @severity or @test or
-            @title or @value or @view or @falsecommand or @falselabel or @truelabel)
-      )
-      else if (@type='update') then (
-        exists(@field) and (count(@value) + count(@script) + count(@method)) = 1 and
-        not(@message or @open or @report or @send or @severity or @test or
-            @title or @view or @falsecommand or @falselabel or @truelabel)
-      )
-      else if (@type='validate') then (
-        exists(@severity) and (count(@test) + count(@script) + count(@method)) = 1 and
-        not(@field or @message or @open or @report or @send or @title or @value or
-            @view or @falsecommand or @falselabel or @truelabel)
-      )
-      else true()
-    "/>
+    <!-- SpEL condition to determine whether the command step should run or not -->
+    <!-- Used by: assistant, mail, method, print, prompt, redirect, save, script, suggestion, update, validate -->
+    <xs:attribute name="condition" type="xs:string" use="optional" />
+    
+    <!-- The field name for the suggestion -->
+    <!-- Used by: suggestion, update -->
+    <xs:attribute name="field" type="xs:string" use="optional" />
+    
+    <!-- The message to be temporarily set in metaData -->
+    <!-- Used by: prompt, suggestion -->
+    <xs:attribute name="message" type="xs:string" use="optional" />
+    
+    <!-- Method call (e.g., 'BeanName.methodName') -->
+    <!-- Used by: method, redirect, update, validate -->
+    <xs:attribute name="method" type="xs:string" use="optional" />
+    
+    <!-- True or false, whether the user should be redirected to the message -->
+    <!-- Used by: mail -->
+    <xs:attribute name="open" type="xs:string" use="optional" />
+    
+    <!-- The name of the report file to be defaulted -->
+    <!-- Used by: print -->
+    <xs:attribute name="report" type="xs:string" use="optional" />
+    
+    <!-- JS Script value -->
+    <!-- Used by: redirect, script, update, validate -->
+    <xs:attribute name="script" type="xs:string" use="optional" />
+    
+    <!-- True of False, whether the message should be automatically sent -->
+    <!-- Used by: mail -->
+    <xs:attribute name="send" type="xs:string" use="optional" />
+    
+    <!-- error, warning or info -->
+    <!-- Used by: validate -->
+    <xs:attribute name="severity" type="xs:string" use="optional" />
+    
+    <!-- SpElL condition returning true or false -->
+    <!-- Used by: validate -->
+    <xs:attribute name="test" type="xs:string" use="optional" />
+    
+    <!-- the title of the prompt -->
+    <!-- Used by: prompt -->
+    <xs:attribute name="title" type="xs:string" use="optional" />
+    
+    <!-- SpEL value -->
+    <!-- Used by: redirect, update -->
+    <xs:attribute name="value" type="xs:string" use="optional" />
+    
+    <!-- The assistant view name -->
+    <!-- Used by: assistant -->
+    <xs:attribute name="view" type="xs:string" use="optional" />
+    
+    <!-- The command group to execute if the user decision is false -->
+    <!-- Used by: prompt -->
+    <xs:attribute name="falsecommand" type="xs:string" use="optional" />
+    
+    <!-- The display name for a false value -->
+    <!-- Used by: prompt -->
+    <xs:attribute name="falselabel" type="xs:string" use="optional" />
+    
+    <!-- The display name for a true value -->
+    <!-- Used by: prompt -->
+    <xs:attribute name="truelabel" type="xs:string" use="optional" />
+    
+    <!-- NOTE: XSD 1.1 <xs:assert> block has been removed for compatibility -->
+    
   </xs:complexType>
 
+  <!-- Enumeration of all valid command types (all lowercase) -->
   <xs:simpleType name="CommandType">
     <xs:restriction base="xs:string">
-      <xs:enumeration value="assistant"/>
-      <xs:enumeration value="mail"/>
-      <xs:enumeration value="method"/>
-      <xs:enumeration value="print"/>
-      <xs:enumeration value="prompt"/>
-      <xs:enumeration value="redirect"/>
-      <xs:enumeration value="save"/>
-      <xs:enumeration value="script"/>
-      <xs:enumeration value="suggestion"/>
-      <xs:enumeration value="update"/>
-      <xs:enumeration value="validate"/>
+      <xs:enumeration value="assistant" />
+      <xs:enumeration value="mail" />
+      <xs:enumeration value="method" />
+      <xs:enumeration value="print" />
+      <xs:enumeration value="prompt" />
+      <xs:enumeration value="redirect" />
+      <xs:enumeration value="save" />
+      <xs:enumeration value="script" />
+      <xs:enumeration value="suggestion" />
+      <xs:enumeration value="update" />
+      <xs:enumeration value="validate" />
     </xs:restriction>
   </xs:simpleType>
+
 </xs:schema>
