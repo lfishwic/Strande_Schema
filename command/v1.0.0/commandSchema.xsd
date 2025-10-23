@@ -10,17 +10,25 @@
            xmlns="http://schemas.strande.ai/command/v1.0.0"
            elementFormDefault="qualified">
 
-  <!-- The root element: <command-group> -->
-  <xs:element name="command-group">
+  <!-- The root element: <commands> -->
+  <xs:element name="commands">
     <xs:complexType>
       <xs:sequence>
-        <!-- Contains one or more <command> elements -->
-        <xs:element name="command" type="CommandElement" minOccurs="1" maxOccurs="unbounded" />
+        <!-- Contains one or more <command-group> elements -->
+        <xs:element name="command-group" type="CommandGroupElement" minOccurs="1" maxOccurs="unbounded" />
       </xs:sequence>
-      <!-- Has a mandatory 'name' attribute -->
-      <xs:attribute name="name" type="xs:string" use="required" />
     </xs:complexType>
   </xs:element>
+
+  <!-- The definition for a <command-group> element -->
+  <xs:complexType name="CommandGroupElement">
+    <xs:sequence>
+      <!-- Contains one or more <command> elements -->
+      <xs:element name="command" type="CommandElement" minOccurs="1" maxOccurs="unbounded" />
+    </xs:sequence>
+    <!-- Has a mandatory 'name' attribute -->
+    <xs:attribute name="name" type="xs:string" use="required" />
+  </xs:complexType>
 
   <!-- The definition for a single <command> element -->
   <xs:complexType name="CommandElement">
@@ -101,7 +109,7 @@
     The 'condition' attribute is universally allowed and thus excluded 
     from the 'not(exists(...))' checks.
     -->
-    <xssert test="
+    <xs:assert test="
       
       -- 1. Assistant
       if (@type = 'assistant') then 
