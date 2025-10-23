@@ -1,14 +1,15 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!--
-XML Schema for the Command Engine Requires an XSD 1.1 compliant parser to enable advanced validation.
+<!-- 
+  XML Schema for the Command Engine
+  Requires an XSD 1.1 compliant parser to enable advanced validation.
 -->
 <xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema"
-  xmlns:vc="http://www.w3.org/2007/XMLSchema-versioning"
-  vc:minVersion="1.1"
-  targetNamespace="http://schemas.strande.ai/command/v1.0.0"
-  xmlns="http://schemas.strande.ai/command/v1.0.0"
-  elementFormDefault="qualified">
-  
+           xmlns:vc="http://www.w3.org/2007/XMLSchema-versioning"
+           vc:minVersion="1.1"
+           targetNamespace="http://schemas.strande.ai/command/v1.0.0"
+           xmlns="http://schemas.strande.ai/command/v1.0.0"
+           elementFormDefault="qualified">
+
   <!-- The root element: <commands> -->
   <xs:element name="commands">
     <xs:complexType>
@@ -213,4 +214,3 @@ XML Schema for the Command Engine Requires an XSD 1.1 compliant parser to enable
   </xs:simpleType>
 
 </xs:schema>
-
