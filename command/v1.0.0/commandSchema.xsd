@@ -90,6 +90,19 @@
     <!-- The command group to execute if the user decision is false -->
     <!-- Used by: prompt -->
     <xs:attribute name="falsecommand" type="xs:string" use="optional" />
+
+    <!-- The lookup command -->
+    <!-- Used by: prompt -->
+    <xs:attribute name="from" type="xs:string" use="optional" />
+
+    
+    <!-- The lookup command -->
+    <!-- Used by: prompt -->
+    <xs:attribute name="on" type="xs:string" use="optional" />
+
+        <!-- The lookup command -->
+    <!-- Used by: prompt -->
+    <xs:attribute name="map" type="xs:string" use="optional" />
     
     <!-- The display name for a false value -->
     <!-- Used by: prompt -->
@@ -116,6 +129,7 @@
       <xs:enumeration value="script" />
       <xs:enumeration value="suggestion" />
       <xs:enumeration value="update" />
+      <xs:enumeration value="lookup" />
       <xs:enumeration value="validate" />
     </xs:restriction>
   </xs:simpleType>
