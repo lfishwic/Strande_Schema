@@ -1,125 +1,82 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!-- 
-  XML Schema for the Command Engine (XSD 1.0 Compliant)
--->
 <xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema"
            targetNamespace="http://schemas.strande.ai/command/v1.0.0"
            xmlns="http://schemas.strande.ai/command/v1.0.0"
            elementFormDefault="qualified">
 
-  <!-- The root element: <commands> -->
   <xs:element name="commands">
     <xs:complexType>
       <xs:sequence>
-        <!-- Contains one or more <command-group> elements -->
         <xs:element name="command-group" type="CommandGroupElement" minOccurs="1" maxOccurs="unbounded" />
       </xs:sequence>
       <xs:attribute name="module" type="xs:string" use="required" />
     </xs:complexType>
   </xs:element>
 
-  <!-- The definition for a <command-group> element -->
   <xs:complexType name="CommandGroupElement">
     <xs:sequence>
-      <!-- Contains one or more <command> elements -->
       <xs:element name="command" type="CommandElement" minOccurs="1" maxOccurs="unbounded" />
     </xs:sequence>
-    <!-- Has a mandatory 'name' attribute -->
     <xs:attribute name="name" type="xs:string" use="required" />
   </xs:complexType>
 
-  <!-- The definition for a single <command> element -->
   <xs:complexType name="CommandElement">
-    
-    <!-- Master list of all possible attributes (all lowercase) -->
     
     <xs:attribute name="type" type="CommandType" use="required" />
 
-    <!-- SpEL condition to determine whether the command step should run or not -->
-    <!-- Used by: assistant, mail, method, print, prompt, redirect, save, script, suggestion, update, validate -->
+    <xs:attribute name="body" type="xs:string" use="optional" />
+
     <xs:attribute name="condition" type="xs:string" use="optional" />
     
-    <!-- The field name for the suggestion -->
-    <!-- Used by: suggestion, update -->
     <xs:attribute name="field" type="xs:string" use="optional" />
     
-    <!-- The message to be temporarily set in metaData -->
-    <!-- Used by: prompt, suggestion -->
+    <xs:attribute name="headers" type="xs:string" use="optional" />
+
     <xs:attribute name="message" type="xs:string" use="optional" />
     
-    <!-- Method call (e.g., 'BeanName.methodName') -->
-    <!-- Used by: method, redirect, update, validate -->
     <xs:attribute name="method" type="xs:string" use="optional" />
     
-    <!-- True or false, whether the user should be redirected to the message -->
-    <!-- Used by: mail -->
     <xs:attribute name="open" type="xs:string" use="optional" />
     
-    <!-- The name of the report file to be defaulted -->
-    <!-- Used by: print -->
     <xs:attribute name="report" type="xs:string" use="optional" />
     
-    <!-- JS Script value -->
-    <!-- Used by: redirect, script, update, validate -->
     <xs:attribute name="script" type="xs:string" use="optional" />
     
-    <!-- True of False, whether the message should be automatically sent -->
-    <!-- Used by: mail -->
     <xs:attribute name="send" type="xs:string" use="optional" />
     
-    <!-- error, warning or info -->
-    <!-- Used by: validate -->
     <xs:attribute name="severity" type="xs:string" use="optional" />
     
-    <!-- SpElL condition returning true or false -->
-    <!-- Used by: validate -->
     <xs:attribute name="test" type="xs:string" use="optional" />
     
-    <!-- the title of the prompt -->
-    <!-- Used by: prompt -->
     <xs:attribute name="title" type="xs:string" use="optional" />
+
+    <xs:attribute name="url" type="xs:string" use="optional" />
     
-    <!-- SpEL value -->
-    <!-- Used by: redirect, update -->
     <xs:attribute name="value" type="xs:string" use="optional" />
+
+    <xs:attribute name="variable" type="xs:string" use="optional" />
     
-    <!-- The assistant view name -->
-    <!-- Used by: assistant -->
     <xs:attribute name="view" type="xs:string" use="optional" />
     
-    <!-- The command group to execute if the user decision is false -->
-    <!-- Used by: prompt -->
     <xs:attribute name="falsecommand" type="xs:string" use="optional" />
 
-    <!-- The lookup command -->
-    <!-- Used by: prompt -->
     <xs:attribute name="from" type="xs:string" use="optional" />
 
-    
-    <!-- The lookup command -->
-    <!-- Used by: prompt -->
     <xs:attribute name="on" type="xs:string" use="optional" />
 
-        <!-- The lookup command -->
-    <!-- Used by: prompt -->
     <xs:attribute name="map" type="xs:string" use="optional" />
     
-    <!-- The display name for a false value -->
-    <!-- Used by: prompt -->
     <xs:attribute name="falselabel" type="xs:string" use="optional" />
     
-    <!-- The display name for a true value -->
-    <!-- Used by: prompt -->
     <xs:attribute name="truelabel" type="xs:string" use="optional" />
     
-    <!-- NOTE: XSD 1.1 <xs:assert> block has been removed for compatibility -->
-    
-  </xs:complexType>
+    </xs:complexType>
 
-  <!-- Enumeration of all valid command types (all lowercase) -->
   <xs:simpleType name="CommandType">
     <xs:restriction base="xs:string">
       <xs:enumeration value="assistant" />
+      <xs:enumeration value="fetch" />
+      <xs:enumeration value="lookup" />
       <xs:enumeration value="mail" />
       <xs:enumeration value="method" />
       <xs:enumeration value="print" />
@@ -129,7 +86,6 @@
       <xs:enumeration value="script" />
       <xs:enumeration value="suggestion" />
       <xs:enumeration value="update" />
-      <xs:enumeration value="lookup" />
       <xs:enumeration value="validate" />
     </xs:restriction>
   </xs:simpleType>
